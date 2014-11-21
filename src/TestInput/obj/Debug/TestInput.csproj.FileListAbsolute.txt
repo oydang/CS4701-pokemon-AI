@@ -1,0 +1,9 @@
+C:\Users\EFL\Documents\Visual Studio 2012\Projects\TestInput\bin\Debug\TestInput.exe.config
+C:\Users\EFL\Documents\Visual Studio 2012\Projects\TestInput\bin\Debug\TestInput.exe
+C:\Users\EFL\Documents\Visual Studio 2012\Projects\TestInput\bin\Debug\TestInput.pdb
+C:\Users\EFL\Documents\Visual Studio 2012\Projects\TestInput\obj\Debug\TestInput.csprojResolveAssemblyReference.cache
+C:\Users\EFL\Documents\Visual Studio 2012\Projects\TestInput\obj\Debug\TestInput.Form1.resources
+C:\Users\EFL\Documents\Visual Studio 2012\Projects\TestInput\obj\Debug\TestInput.Properties.Resources.resources
+C:\Users\EFL\Documents\Visual Studio 2012\Projects\TestInput\obj\Debug\TestInput.csproj.GenerateResource.Cache
+C:\Users\EFL\Documents\Visual Studio 2012\Projects\TestInput\obj\Debug\TestInput.exe
+C:\Users\EFL\Documents\Visual Studio 2012\Projects\TestInput\obj\Debug\TestInput.pdb
