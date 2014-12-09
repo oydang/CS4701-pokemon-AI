@@ -11,36 +11,48 @@ using System.IO;
 
 namespace Trainer
 {
-    public enum Stats{
-
-    }
 
     public class AITrainer
     { 
 
         const string RAM_FILENAME = "C:\\Users\\Olivia\\Dropbox\\College\\Junior\\CS4700\\pokeBot\\Tracer-VisualboyAdvance1.7.1\\Tracer-VisualboyAdvance1.7.1\\tracer\\Pokemon Red\\cgb_wram.bin";
-
         private BinaryReader bReader;
+        private Maps utilMaps;
+        private Random generator;
 
 
         public AITrainer()
         {
- 
+            utilMaps = new Maps();
+            generator = new Random();
+
         }
 
+        /// <summary>
+        /// Dumps the RAM in the current VisualBoyAdvance game into cgb_ram.bin
+        /// </summary>
         public void DumpRAM()
         {
-            //ushort scanCode = (ushort)WindowsAPI.MapVirtualKey(WindowsAPI.VK_OEM_PERIOD, 0);
-            //Debug.WriteLine(ushort);
-            //keyDown(scanCode);
-            //Thread.Sleep(34);
-            //keyUp(scanCode);
-            PressKey('.');
-            
+            INPUT[] inputs = new INPUT[1];
+            inputs[0].type = WindowsAPI.INPUT_KEYBOARD;
+            inputs[0].ki.wVk = 0;
+            inputs[0].ki.dwFlags = 0x0008;
+            inputs[0].ki.wScan = 0x34;
+
+            uint intReturn = WindowsAPI.SendInput(1, inputs, System.Runtime.InteropServices.Marshal.SizeOf(inputs[0]));
+            if (intReturn != 1)
+            {
+                throw new Exception("Could not press '.' to dump RAM");
+            }
+
+            Thread.Sleep(34);
+
+            inputs[0].ki.dwFlags = WindowsAPI.KEYEVENTF_KEYUP | WindowsAPI.KEYEVENTF_SCANCODE;
+            intReturn = WindowsAPI.SendInput(1, inputs, System.Runtime.InteropServices.Marshal.SizeOf(inputs[0]));
   
         }
 
-        public string ReadRAM(){
+        public string GetStat(Stats stat){
             string charName = null;
             this.bReader = new BinaryReader(File.Open(RAM_FILENAME, FileMode.Open));
             bReader.BaseStream.Position = 0x1158;
@@ -62,11 +74,7 @@ namespace Trainer
         public static void PressKey(char ch)
         {
             byte vk = WindowsAPI.VkKeyScan(ch);
-            Debug.WriteLine("vk is ");
-            Debug.WriteLine(vk.ToString("X2"));
             ushort scanCode = (ushort)WindowsAPI.MapVirtualKey(vk, 0);
-            Debug.WriteLine("Scancode is ");
-            Debug.WriteLine(scanCode.ToString("X2"));
             keyDown(scanCode);
             Thread.Sleep(340);
             keyUp(scanCode);

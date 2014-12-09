@@ -39,8 +39,7 @@ namespace Trainer{
 
             AITrainer trainer = new AITrainer();
             trainer.DumpRAM();
-
-            
+ 
 
         }
 
