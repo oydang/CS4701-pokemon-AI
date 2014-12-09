@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace Trainer
 {
-    public enum Stats
+    public enum GameStats
     {
         MyPkmLevel,
         MyPkmAttack,
@@ -26,6 +26,7 @@ namespace Trainer
     /// </summary>
     public enum PokemonMoves
     {
+        None = 0,
         Pound = 1,
         KarateChop,
         DoubleSlap,
@@ -237,8 +238,8 @@ namespace Trainer
     /// </summary>
     public class Maps
     {
-        public Dictionary<Stats, int> StatAddressMap; //Maps Stat to its location in VBA WRAM and the length of the stat
-        public Dictionary<Stats, int> StatLengthMap; //Maps Stat to its length in VBA WRAM
+        public Dictionary<GameStats, int> StatAddressMap; //Maps Stat to its location in VBA WRAM and the length of the stat
+        public Dictionary<GameStats, int> StatLengthMap; //Maps Stat to its length in VBA WRAM
         public Dictionary<PokemonMoves, MoveStatistic> MoveStatsMap; // Maps Pokemon moves to its <Attack type, power, accuracy>
         public float[,] TypeModiferChart;  
 
@@ -253,31 +254,31 @@ namespace Trainer
 
         private void populateStatAddresses()
         {
-            StatAddressMap = new Dictionary<Stats, int>();
-            StatAddressMap.Add(Stats.MyPkmAttack, 0x1025);
-            StatAddressMap.Add(Stats.MyPkmLevel, 0x1022);
-            StatAddressMap.Add(Stats.MyPkmMoves, 0x101C);
-            StatAddressMap.Add(Stats.MyPkmType1, 0x1019);
-            StatAddressMap.Add(Stats.MyPkmType2, 0x101A);
-            StatAddressMap.Add(Stats.MyPkmHealth, 0x1015);
-            StatAddressMap.Add(Stats.OpponentDefense, 0x0ff8);
-            StatAddressMap.Add(Stats.OpponentType1, 0x0fea);
-            StatAddressMap.Add(Stats.OpponentType2, 0x0feb); 
+            StatAddressMap = new Dictionary<GameStats, int>();
+            StatAddressMap.Add(GameStats.MyPkmAttack, 0x1025);
+            StatAddressMap.Add(GameStats.MyPkmLevel, 0x1022);
+            StatAddressMap.Add(GameStats.MyPkmMoves, 0x101C);
+            StatAddressMap.Add(GameStats.MyPkmType1, 0x1019);
+            StatAddressMap.Add(GameStats.MyPkmType2, 0x101A);
+            StatAddressMap.Add(GameStats.MyPkmHealth, 0x1015);
+            StatAddressMap.Add(GameStats.OpponentDefense, 0x0ff8);
+            StatAddressMap.Add(GameStats.OpponentType1, 0x0fea);
+            StatAddressMap.Add(GameStats.OpponentType2, 0x0feb); 
 
         }
 
         private void populateStatLengths()
         {
-            StatLengthMap = new Dictionary<Stats, int>();
-            StatLengthMap.Add(Stats.MyPkmAttack, 2);
-            StatLengthMap.Add(Stats.MyPkmLevel, 1);
-            StatLengthMap.Add(Stats.MyPkmMoves, 4);
-            StatLengthMap.Add(Stats.MyPkmType1, 1);
-            StatLengthMap.Add(Stats.MyPkmType2, 1);
-            StatLengthMap.Add(Stats.MyPkmHealth, 2);
-            StatLengthMap.Add(Stats.OpponentDefense,2);
-            StatLengthMap.Add(Stats.OpponentType1, 1);
-            StatLengthMap.Add(Stats.OpponentType2, 1); 
+            StatLengthMap = new Dictionary<GameStats, int>();
+            StatLengthMap.Add(GameStats.MyPkmAttack, 2);
+            StatLengthMap.Add(GameStats.MyPkmLevel, 1);
+            StatLengthMap.Add(GameStats.MyPkmMoves, 4);
+            StatLengthMap.Add(GameStats.MyPkmType1, 1);
+            StatLengthMap.Add(GameStats.MyPkmType2, 1);
+            StatLengthMap.Add(GameStats.MyPkmHealth, 2);
+            StatLengthMap.Add(GameStats.OpponentDefense,2);
+            StatLengthMap.Add(GameStats.OpponentType1, 1);
+            StatLengthMap.Add(GameStats.OpponentType2, 1); 
         }
 
 

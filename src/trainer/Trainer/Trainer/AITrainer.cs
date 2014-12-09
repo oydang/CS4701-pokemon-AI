@@ -12,24 +12,18 @@ using System.IO;
 namespace Trainer
 {
 
+    /// <summary>
+    /// The trainer controls all keypresses
+    /// </summary>
     public class AITrainer
     { 
 
-        const string RAM_FILENAME = "C:\\Users\\Olivia\\Dropbox\\College\\Junior\\CS4700\\pokeBot\\Tracer-VisualboyAdvance1.7.1\\Tracer-VisualboyAdvance1.7.1\\tracer\\Pokemon Red\\cgb_wram.bin";
-        private BinaryReader bReader;
-        private Maps utilMaps;
-        private Random generator;
-
-
         public AITrainer()
         {
-            utilMaps = new Maps();
-            generator = new Random();
-
         }
 
         /// <summary>
-        /// Dumps the RAM in the current VisualBoyAdvance game into cgb_ram.bin
+        /// Dumps the RAM in the current VisualBoyAdvance game into cgb_ram.bin by pressing the '.' key
         /// </summary>
         public void DumpRAM()
         {
@@ -49,20 +43,8 @@ namespace Trainer
 
             inputs[0].ki.dwFlags = WindowsAPI.KEYEVENTF_KEYUP | WindowsAPI.KEYEVENTF_SCANCODE;
             intReturn = WindowsAPI.SendInput(1, inputs, System.Runtime.InteropServices.Marshal.SizeOf(inputs[0]));
-  
-        }
+            Thread.Sleep(1000); //Wait for cgb_wram.bin file to be updated
 
-        public string GetStat(Stats stat){
-            string charName = null;
-            this.bReader = new BinaryReader(File.Open(RAM_FILENAME, FileMode.Open));
-            bReader.BaseStream.Position = 0x1158;
-            for (int i = 0x1158; i <= 0x115E; i++)
-            {
-                charName += bReader.ReadByte().ToString("X2");
-            }
-            Debug.WriteLine(charName);
-            bReader.Close();
-            return charName;
         }
 
 

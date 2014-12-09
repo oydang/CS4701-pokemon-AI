@@ -37,8 +37,9 @@ namespace Trainer{
             IntPtr handle = NativeMethods.FindWindow(null, "VisualBoyAdvance");
             WindowsAPI.SwitchWindow(handle);
 
-            AITrainer trainer = new AITrainer();
-            trainer.DumpRAM();
+            //Run our AI
+            Control control = new Control();
+            control.Run();
  
 
         }
