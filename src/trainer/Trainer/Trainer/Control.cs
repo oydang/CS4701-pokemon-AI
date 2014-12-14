@@ -10,19 +10,13 @@ namespace Trainer
 {
     public class Control
     {
-        private AITrainer trainer;
         private BinaryReader bReader;
         private Maps utilMaps;
-        private Random generator; //For the equation we will use from https://www.math.miami.edu/~jam/azure/compendium/battdam.htm
-        const string RAM_FILENAME = "C:\\Users\\Olivia\\Dropbox\\College\\Junior\\CS4700\\pokeBot\\Tracer-VisualboyAdvance1.7.1\\Tracer-VisualboyAdvance1.7.1\\tracer\\Pokemon Red\\cgb_wram.bin";
-
+        const string RAM_FILENAME = "C:\\Users\\EFL\\Documents\\Cornell 2014FA\\AI\\Final Project\\clone\\Tracer-VisualboyAdvance1.7.1\\Tracer-VisualboyAdvance1.7.1\\tracer\\Pokemon Red\\cgb_wram.bin";
 
         public Control()
         {
-            trainer = new AITrainer();
-            utilMaps = new Maps();
-            generator = new Random();
-            
+            utilMaps = new Maps();        
         }
 
         /// <summary>
@@ -30,8 +24,10 @@ namespace Trainer
         /// </summary>
         public void Run()
         {
-            trainer.DumpRAM();
-            Debug.WriteLine(GetMyPkmLevel());
+            AITrainer.DumpRAM();
+            int bestmove = getBestMove();
+            Debug.WriteLine(bestmove);
+            AITrainer.doMove(ActionTypes.Attack, bestmove);
         }
 
         /// <summary>
@@ -62,20 +58,16 @@ namespace Trainer
         /// Returns the VIABLE moves that my Pokemon in battle has. All moves with PP=0 are not counted.
         /// </summary>
         /// <returns></returns>
-        public PokemonMoves[] GetMyPkmMoves()
+        public Tuple<PokemonMoves,int>[] GetMyPkmMoves()
         {
-            PokemonMoves[] moves = new PokemonMoves[4];
+            Tuple<PokemonMoves,int>[] moves = new Tuple<PokemonMoves,int>[4];
             byte[] bMoves = readBin(utilMaps.StatAddressMap[GameStats.MyPkmMoves], utilMaps.StatLengthMap[GameStats.MyPkmMoves]);
             for (int i = 0; i < bMoves.Length; i++)
             {
                 int pp = readBin(i + 0x102D, 1)[0]; //The pp left for this move
-                moves[i] = (PokemonMoves.None);
-                if(pp > 0){
-                    moves[i] = (PokemonMoves) bMoves[i];
-                }
+                moves[i] = new Tuple<PokemonMoves,int>((PokemonMoves) bMoves[i],pp);
             }
             return moves;
-            
         }
 
         /// <summary>
@@ -95,8 +87,7 @@ namespace Trainer
         public PokemonTypes GetMyPkmType2()
         {
             byte[] b = readBin(utilMaps.StatAddressMap[GameStats.MyPkmType2], utilMaps.StatLengthMap[GameStats.MyPkmType2]);
-            return (PokemonTypes)(int)b[0];
-          
+            return (PokemonTypes)(int)b[0];  
         }
 
         /// <summary>
@@ -108,7 +99,6 @@ namespace Trainer
             byte[] b = readBin(utilMaps.StatAddressMap[GameStats.MyPkmAttack], utilMaps.StatLengthMap[GameStats.MyPkmAttack]);
             return (256 * (int)b[0]) + ((int)b[1]);
         }
-
 
         /// <summary>
         /// Returns the Opponent pokemon's current defensive stat in a battle
@@ -139,7 +129,90 @@ namespace Trainer
             return (PokemonTypes)(int)b[0];
         }
         
+        /// <summary>
+        /// Gets the best move index that my current pokemon can do
+        /// </summary>
+        private int getBestMove()
+        {
+            int bestmove = -1;
+            double bestattack = -1;
+            int bestpp = -1;
 
+            Tuple<PokemonMoves,int>[] moves = GetMyPkmMoves();
+            for (int move = 0; move < 4; move++)
+            {
+                int pp = moves[move].Item2;
+                if (pp > 0)
+                {
+                    double attack = getDamage(moves[move].Item1, true);
+                    Debug.WriteLine(attack);
+                    if (attack > bestattack || (attack == bestattack && pp > bestpp))
+                    {
+                        bestmove = move;
+                        bestattack = attack;
+                        bestpp = pp;
+                    }
+                }
+            }
+            return bestmove;
+        }
+
+        /// <summary>
+        /// Caclulates the approx damage to opponent. Else needs to modified to include opponent stats, currently does nothing different.
+        /// Equation ignoring last Z from: https://www.math.miami.edu/~jam/azure/compendium/battdam.htm
+        /// </summary>
+        /// 
+        private double getDamage(PokemonMoves move, bool myPokemon)
+        {
+            double A,B,C,D,X,Y,Z;
+            A = B = C = D = X = Y = Z = 1;
+
+            if (myPokemon)
+            {
+                A = GetMyPkmAttack();
+                B = GetMyPkmAttack();
+                MoveStatistic ms = utilMaps.MoveStatsMap[move];
+                C = ms.AttackPower;
+                D = GetOpponentDefense();
+                PokemonTypes myt1 = GetMyPkmType1();
+                PokemonTypes myt2 = GetMyPkmType2();
+                PokemonTypes opt1 = GetOpponentType1();
+                PokemonTypes opt2 = GetOpponentType2();
+                if (myt1 == ms.MoveType || myt2 == ms.MoveType)
+                {
+                    X = 1.5;
+                }
+                Y = utilMaps.TypeModiferChart[(int)ms.MoveType, (int)opt1];
+                if (opt1 != opt2)
+                {
+                    Y *= utilMaps.TypeModiferChart[(int)ms.MoveType, (int)opt2];
+                }
+                Z = ms.Accuracy;
+            }
+            else
+            {
+                A = GetMyPkmLevel();
+                B = GetMyPkmAttack();
+                MoveStatistic ms = utilMaps.MoveStatsMap[move];
+                C = ms.AttackPower;
+                D = GetOpponentDefense();
+                PokemonTypes myt1 = GetMyPkmType1();
+                PokemonTypes myt2 = GetMyPkmType2();
+                PokemonTypes opt1 = GetOpponentType1();
+                PokemonTypes opt2 = GetOpponentType2();
+                if (myt1 == ms.MoveType || myt2 == ms.MoveType)
+                {
+                    X = 1.5;
+                }
+                Y = utilMaps.TypeModiferChart[(int)ms.MoveType, (int)opt1];
+                if (opt1 != opt2)
+                {
+                    Y *= utilMaps.TypeModiferChart[(int)ms.MoveType, (int)opt2];
+                }
+                Z = ms.Accuracy;
+            }
+            return ((((2 * A / 5 + 2) * B * C / D) / 50) + 2) * X * Y * Z;
+        }
 
         /// <summary>
         /// Returns a the bytes read from cgb_wram.bin at the specified address and length.

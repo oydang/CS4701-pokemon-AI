@@ -217,6 +217,17 @@ namespace Trainer
     }
 
     /// <summary>
+    /// Type of move to do.
+    /// </summary>
+    public enum ActionTypes
+    {
+        Attack = 0,
+        Switch,
+        Item,
+        Escape
+    }
+
+    /// <summary>
     /// Holds the information about a certain move
     /// </summary>
     public class MoveStatistic

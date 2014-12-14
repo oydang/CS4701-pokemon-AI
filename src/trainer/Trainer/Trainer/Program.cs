@@ -35,13 +35,15 @@ namespace Trainer{
         {
             //Set VisualBoyAdvance as the active window
             IntPtr handle = NativeMethods.FindWindow(null, "VisualBoyAdvance");
-            WindowsAPI.SwitchWindow(handle);
+            Control control = new Control();
 
             //Run our AI
-            Control control = new Control();
-            control.Run();
- 
-
+            while (true)
+            {
+                Console.ReadLine();
+                WindowsAPI.SwitchWindow(handle);
+                control.Run();
+            }
         }
 
         internal static class NativeMethods

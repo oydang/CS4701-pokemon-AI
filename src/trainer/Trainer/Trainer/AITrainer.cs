@@ -17,15 +17,10 @@ namespace Trainer
     /// </summary>
     public class AITrainer
     { 
-
-        public AITrainer()
-        {
-        }
-
         /// <summary>
         /// Dumps the RAM in the current VisualBoyAdvance game into cgb_ram.bin by pressing the '.' key
         /// </summary>
-        public void DumpRAM()
+        public static void DumpRAM()
         {
             INPUT[] inputs = new INPUT[1];
             inputs[0].type = WindowsAPI.INPUT_KEYBOARD;
@@ -90,6 +85,48 @@ namespace Trainer
             }
         }
 
+        /// <summary>
+        /// Navigates to a specific move, item
+        /// </summary>
+        public static void doMove(ActionTypes type, int index)
+        {
+            switch (type)
+            {
+                case ActionTypes.Attack: 
+                    doAttack(index);
+                    break;
+                case ActionTypes.Switch:
+                    doSwitch(index);
+                    break;
+                case ActionTypes.Item:
+                    doItem(index);
+                    break;
+                case ActionTypes.Escape:
+                    Console.WriteLine("Escape is for the weak");
+                    break;
+            }
+
+        }
+
+        private static void doAttack(int index)
+        {
+            PressKey('a');
+            for (int i = 0; i < index; i++)
+            {
+                PressKey('2');
+            }
+            PressKey('a');
+        }
+
+        private static void doSwitch(int index)
+        {
+
+        }
+
+        private static void doItem(int index)
+        {
+
+        }
     }
 
 
