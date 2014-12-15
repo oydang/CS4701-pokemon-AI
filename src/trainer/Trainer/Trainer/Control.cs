@@ -12,7 +12,7 @@ namespace Trainer
     {
         private BinaryReader bReader;
         private Maps utilMaps;
-        const string RAM_FILENAME = "C:\\Users\\EFL\\Documents\\Cornell 2014FA\\AI\\Final Project\\clone\\Tracer-VisualboyAdvance1.7.1\\Tracer-VisualboyAdvance1.7.1\\tracer\\Pokemon Red\\cgb_wram.bin";
+        const string RAM_FILENAME = "..\\..\\..\\..\\..\\..\\Tracer-VisualboyAdvance1.7.1\\Tracer-VisualboyAdvance1.7.1\\tracer\\Pokemon Red\\cgb_wram.bin";
 
         public Control()
         {
@@ -101,13 +101,29 @@ namespace Trainer
         }
 
         /// <summary>
-        /// Returns the Opponent pokemon's current defensive stat in a battle
+        /// Returns my current pokemon in battle's special attack/defense stat
+        /// </summary>
+        /// <returns></returns>
+        public int GetMyPkmSpecial()
+        {
+            byte[] b = readBin(utilMaps.StatAddressMap[GameStats.MyPkmSpecial], utilMaps.StatLengthMap[GameStats.MyPkmAttack]);
+            return (256 * (int)b[0]) + ((int)b[1]);
+        }
+
+        /// <summary>
+        /// Returns the Opponent pokemon's current special attack/defense in a battle
         /// </summary>
         /// <returns></returns>
         public int GetOpponentDefense()
         {
             byte[] b = readBin(utilMaps.StatAddressMap[GameStats.OpponentDefense], utilMaps.StatLengthMap[GameStats.OpponentDefense]);
             return (256 * (int)b[0]) + ((int) b[1]);
+        }
+
+        public int GetOpponentSpecial()
+        {
+            byte[] b = readBin(utilMaps.StatAddressMap[GameStats.OpponentDefense], utilMaps.StatLengthMap[GameStats.OpponentDefense]);
+            return (256 * (int)b[0]) + ((int)b[1]);
         }
 
         /// <summary>
@@ -212,6 +228,18 @@ namespace Trainer
                 Z = ms.Accuracy;
             }
             return ((((2 * A / 5 + 2) * B * C / D) / 50) + 2) * X * Y * Z;
+        }
+
+        public bool IsSpecialMove(PokemonMoves m)
+        {
+            MoveStatistic info = utilMaps.MoveStatsMap[m];
+            return info.MoveType == PokemonTypes.Water ||
+                    info.MoveType == PokemonTypes.Grass ||
+                    info.MoveType == PokemonTypes.Ice ||
+                    info.MoveType == PokemonTypes.Fire ||
+                    info.MoveType == PokemonTypes.Electric ||
+                    info.MoveType == PokemonTypes.Psychic ||
+                    info.MoveType == PokemonTypes.Dragon;
         }
 
         /// <summary>

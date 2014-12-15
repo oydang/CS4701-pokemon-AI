@@ -15,10 +15,11 @@ namespace Trainer
         MyPkmType1,
         MyPkmType2,
         MyPkmHealth,
+        MyPkmSpecial,
         OpponentDefense,
         OpponentType1,
-        OpponentType2
-        
+        OpponentType2,
+        OpponentSpecial
     }
 
     /// <summary>
@@ -274,7 +275,9 @@ namespace Trainer
             StatAddressMap.Add(GameStats.MyPkmHealth, 0x1015);
             StatAddressMap.Add(GameStats.OpponentDefense, 0x0ff8);
             StatAddressMap.Add(GameStats.OpponentType1, 0x0fea);
-            StatAddressMap.Add(GameStats.OpponentType2, 0x0feb); 
+            StatAddressMap.Add(GameStats.OpponentType2, 0x0feb);
+            StatAddressMap.Add(GameStats.OpponentSpecial, 0x0ffc);
+            StatAddressMap.Add(GameStats.MyPkmSpecial, 0x102B);
 
         }
 
