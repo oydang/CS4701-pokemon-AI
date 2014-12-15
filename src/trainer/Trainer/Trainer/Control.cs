@@ -106,7 +106,7 @@ namespace Trainer
         /// <returns></returns>
         public int GetMyPkmSpecial()
         {
-            byte[] b = readBin(utilMaps.StatAddressMap[GameStats.MyPkmSpecial], utilMaps.StatLengthMap[GameStats.MyPkmAttack]);
+            byte[] b = readBin(utilMaps.StatAddressMap[GameStats.MyPkmSpecial], utilMaps.StatLengthMap[GameStats.MyPkmSpecial]);
             return (256 * (int)b[0]) + ((int)b[1]);
         }
 
@@ -122,7 +122,7 @@ namespace Trainer
 
         public int GetOpponentSpecial()
         {
-            byte[] b = readBin(utilMaps.StatAddressMap[GameStats.OpponentDefense], utilMaps.StatLengthMap[GameStats.OpponentDefense]);
+            byte[] b = readBin(utilMaps.StatAddressMap[GameStats.OpponentSpecial], utilMaps.StatLengthMap[GameStats.OpponentSpecial]);
             return (256 * (int)b[0]) + ((int)b[1]);
         }
 
