@@ -19,7 +19,9 @@ namespace Trainer
         OpponentDefense,
         OpponentType1,
         OpponentType2,
-        OpponentSpecial
+        OpponentSpecial,
+        OpponentHealth,
+        IsInBattle
     }
 
     /// <summary>
@@ -278,6 +280,7 @@ namespace Trainer
             StatAddressMap.Add(GameStats.OpponentType2, 0x0feb);
             StatAddressMap.Add(GameStats.OpponentSpecial, 0x0ffc);
             StatAddressMap.Add(GameStats.MyPkmSpecial, 0x102B);
+            StatAddressMap.Add(GameStats.IsInBattle, 0x1057);
 
         }
 
@@ -292,7 +295,10 @@ namespace Trainer
             StatLengthMap.Add(GameStats.MyPkmHealth, 2);
             StatLengthMap.Add(GameStats.OpponentDefense,2);
             StatLengthMap.Add(GameStats.OpponentType1, 1);
-            StatLengthMap.Add(GameStats.OpponentType2, 1); 
+            StatLengthMap.Add(GameStats.OpponentType2, 1);
+            StatLengthMap.Add(GameStats.MyPkmSpecial, 2);
+            StatLengthMap.Add(GameStats.OpponentSpecial, 2);
+            StatLengthMap.Add(GameStats.IsInBattle, 1);
         }
 
 

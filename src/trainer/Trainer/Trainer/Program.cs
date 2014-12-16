@@ -40,7 +40,8 @@ namespace Trainer{
             //Run our AI
             while (true)
             {
-                Console.ReadLine();
+                //Console.ReadLine();
+                Thread.Sleep(3000);
                 WindowsAPI.SwitchWindow(handle);
                 control.Run();
             }

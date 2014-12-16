@@ -24,10 +24,26 @@ namespace Trainer
         /// </summary>
         public void Run()
         {
-            AITrainer.DumpRAM();
-            int bestmove = getBestMove();
-            Debug.WriteLine(bestmove);
-            AITrainer.doMove(ActionTypes.Attack, bestmove);
+            if (GetIsInBattle() != 0)
+            {
+                AITrainer.DumpRAM();
+                int bestmove = calculateBestMove();
+                Debug.WriteLine(bestmove);
+                AITrainer.doMove(ActionTypes.Attack, bestmove);
+            }
+
+        }
+
+        /// <summary>
+        /// 0 if player is not currently in battle, otherwise is in battle!
+        /// </summary>
+        /// <returns></returns>
+        public int GetIsInBattle()
+        {
+            int addr = utilMaps.StatAddressMap[GameStats.IsInBattle];
+            int length = utilMaps.StatLengthMap[GameStats.IsInBattle];
+            byte[] b = readBin(addr, length);
+            return (int)b[0];
         }
 
         /// <summary>
@@ -77,7 +93,17 @@ namespace Trainer
         public PokemonTypes GetMyPkmType1()
         {
             byte[] b = readBin(utilMaps.StatAddressMap[GameStats.MyPkmType1], utilMaps.StatLengthMap[GameStats.MyPkmType1]);
-            return (PokemonTypes) (int) b[0];
+            int index = (int)b[0];
+            //Weird indices for types... trying to map to [0, 14] but see http://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_data_structure_in_Generation_I
+            if (index == 7 || index == 8)
+            {
+                index -= 1;
+            }
+            if (index >= 20)
+            {
+                index -= 12;
+            }
+            return (PokemonTypes)index;
         }
 
         /// <summary>
@@ -87,7 +113,17 @@ namespace Trainer
         public PokemonTypes GetMyPkmType2()
         {
             byte[] b = readBin(utilMaps.StatAddressMap[GameStats.MyPkmType2], utilMaps.StatLengthMap[GameStats.MyPkmType2]);
-            return (PokemonTypes)(int)b[0];  
+            int index = (int)b[0];
+            //Weird indices for types... trying to map to [0, 14] but see http://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_data_structure_in_Generation_I
+            if (index == 7 || index == 8)
+            {
+                index -= 1;
+            }
+            if (index >= 20)
+            {
+                index -= 12;
+            }
+            return (PokemonTypes)index;
         }
 
         /// <summary>
@@ -132,7 +168,17 @@ namespace Trainer
         /// <returns></returns>
         public PokemonTypes GetOpponentType1(){
             byte[] b = readBin(utilMaps.StatAddressMap[GameStats.OpponentType1], utilMaps.StatLengthMap[GameStats.OpponentType1]);
-            return (PokemonTypes)(int)b[0];
+            int index = (int)b[0];
+            //Weird indices for types... trying to map to [0, 14] but see http://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_data_structure_in_Generation_I
+            if (index == 7 || index == 8)
+            {
+                index -= 1;
+            }
+            if (index >= 20)
+            {
+                index -= 12;
+            }
+            return (PokemonTypes)index;
         }
 
         /// <summary>
@@ -142,13 +188,23 @@ namespace Trainer
         public PokemonTypes GetOpponentType2()
         {
             byte[] b = readBin(utilMaps.StatAddressMap[GameStats.OpponentType2], utilMaps.StatLengthMap[GameStats.OpponentType2]);
-            return (PokemonTypes)(int)b[0];
+            int index = (int)b[0];
+            //Weird indices for types... trying to map to [0, 14] but see http://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_data_structure_in_Generation_I
+            if (index == 7 || index == 8)
+            {
+                index -= 1;
+            }
+            if (index >= 20)
+            {
+                index -= 12;
+            }
+            return (PokemonTypes)index;
         }
         
         /// <summary>
         /// Gets the best move index that my current pokemon can do
         /// </summary>
-        private int getBestMove()
+        private int calculateBestMove()
         {
             int bestmove = -1;
             double bestattack = -1;
@@ -160,7 +216,7 @@ namespace Trainer
                 int pp = moves[move].Item2;
                 if (pp > 0)
                 {
-                    double attack = getDamage(moves[move].Item1, true);
+                    double attack = calculateDamage(moves[move].Item1, true);
                     Debug.WriteLine(attack);
                     if (attack > bestattack || (attack == bestattack && pp > bestpp))
                     {
@@ -178,7 +234,7 @@ namespace Trainer
         /// Equation ignoring last Z from: https://www.math.miami.edu/~jam/azure/compendium/battdam.htm
         /// </summary>
         /// 
-        private double getDamage(PokemonMoves move, bool myPokemon)
+        private double calculateDamage(PokemonMoves move, bool myPokemon)
         {
             double A,B,C,D,X,Y,Z;
             A = B = C = D = X = Y = Z = 1;
