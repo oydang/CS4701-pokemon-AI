@@ -26,6 +26,11 @@ namespace Trainer
         {
             if (GetIsInBattle() != 0)
             {
+                for (int i = 0; i < 15; i++)
+                {
+                    //Spam B to get to fight scene
+                    AITrainer.PressKey('b');
+                }
                 AITrainer.DumpRAM();
                 int bestmove = calculateBestMove();
                 Debug.WriteLine(bestmove);

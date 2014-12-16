@@ -53,9 +53,9 @@ namespace Trainer
             byte vk = WindowsAPI.VkKeyScan(ch);
             ushort scanCode = (ushort)WindowsAPI.MapVirtualKey(vk, 0);
             keyDown(scanCode);
-            Thread.Sleep(340);
+            Thread.Sleep(500);
             keyUp(scanCode);
-            Thread.Sleep(34);
+            Thread.Sleep(500);
         }
 
         private static void keyDown(ushort scanCode)
