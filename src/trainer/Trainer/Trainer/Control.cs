@@ -186,7 +186,14 @@ namespace Trainer
             if (myPokemon)
             {
                 A = GetMyPkmAttack();
-                B = GetMyPkmAttack();
+                if (IsSpecialMove(move))
+                {
+                    B = GetMyPkmSpecial();
+                }
+                else
+                {
+                    B = GetMyPkmAttack();
+                }
                 MoveStatistic ms = utilMaps.MoveStatsMap[move];
                 C = ms.AttackPower;
                 D = GetOpponentDefense();
