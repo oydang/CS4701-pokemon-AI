@@ -36,14 +36,15 @@ namespace Trainer{
             //Set VisualBoyAdvance as the active window
             IntPtr handle = NativeMethods.FindWindow(null, "VisualBoyAdvance");
             Control control = new Control();
-            WindowsAPI.SwitchWindow(handle);
+         
 
             //Run our AI
             while (true)
             {
                 //Console.ReadLine();
-                Thread.Sleep(3000);
+                WindowsAPI.SwitchWindow(handle);
                 control.Run();
+                Thread.Sleep(1000);
             }
         }
 

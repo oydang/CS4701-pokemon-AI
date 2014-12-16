@@ -13,10 +13,13 @@ namespace Trainer
         private BinaryReader bReader;
         private Maps utilMaps;
         const string RAM_FILENAME = "..\\..\\..\\..\\..\\..\\Tracer-VisualboyAdvance1.7.1\\Tracer-VisualboyAdvance1.7.1\\tracer\\Pokemon Red\\cgb_wram.bin";
+        private Random generator;
+        private int lastMoveIndex = 0;
 
         public Control()
         {
-            utilMaps = new Maps();        
+            utilMaps = new Maps();
+            generator = new Random();
         }
 
         /// <summary>
@@ -24,17 +27,28 @@ namespace Trainer
         /// </summary>
         public void Run()
         {
+            AITrainer.DumpRAM();
             if (GetIsInBattle() != 0)
             {
-                for (int i = 0; i < 15; i++)
+                int bestmove;
+                if (GetMyPkmHealth() == 0)
                 {
-                    //Spam B to get to fight scene
-                    AITrainer.PressKey('b');
+                    AITrainer.doMove(ActionTypes.Switch, generator.Next(6));
+                    lastMoveIndex = 0;
                 }
-                AITrainer.DumpRAM();
-                int bestmove = calculateBestMove();
-                Debug.WriteLine(bestmove);
-                AITrainer.doMove(ActionTypes.Attack, bestmove);
+                else
+                {
+                    for (int i = 0; i < 8; i++)
+                    {
+                        //Spam B to get to fight scene
+                        AITrainer.PressKey('b');
+                        Debug.WriteLine("Spamming b");
+                    }
+                    bestmove = calculateBestMove();
+                    Debug.WriteLine(bestmove);
+                    AITrainer.doMove(ActionTypes.Attack, (bestmove-lastMoveIndex)%4);
+                    lastMoveIndex = bestmove;
+                }
             }
 
         }

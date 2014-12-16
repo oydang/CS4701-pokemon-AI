@@ -38,7 +38,7 @@ namespace Trainer
 
             inputs[0].ki.dwFlags = WindowsAPI.KEYEVENTF_KEYUP | WindowsAPI.KEYEVENTF_SCANCODE;
             intReturn = WindowsAPI.SendInput(1, inputs, System.Runtime.InteropServices.Marshal.SizeOf(inputs[0]));
-            Thread.Sleep(1000); //Wait for cgb_wram.bin file to be updated
+            Thread.Sleep(2000); //Wait for cgb_wram.bin file to be updated
 
         }
 
@@ -120,7 +120,11 @@ namespace Trainer
 
         private static void doSwitch(int index)
         {
-
+            for (int i = 0; i < index; i++)
+            {
+                PressKey('2');
+            }
+            PressKey('a');
         }
 
         private static void doItem(int index)
